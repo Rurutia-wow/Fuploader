@@ -50,7 +50,7 @@ INTERFACE_GAME_VERSION_MAP: Mapping[str, Mapping[str, str]] = {
 
 # Historical builds can appear in universal ZIPs without a matching Creator
 # release target. Preserve their Interface codes without selecting a server.
-KNOWN_UNMAPPED_INTERFACES = {"20504", "30403", "30405", "50502"}
+KNOWN_UNMAPPED_INTERFACES = {"20504", "20505", "30403", "30405", "50502", "50503"}
 
 _INTERFACE_RE = re.compile(r"^\s*##\s*Interface\s*:\s*(.*?)\s*$", re.IGNORECASE)
 _INTERFACE_VALUE_RE = re.compile(r"^\d+$")

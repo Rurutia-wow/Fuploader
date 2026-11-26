@@ -140,6 +140,22 @@ class ModusZipParserTests(unittest.TestCase):
         })}]
         self.assertEqual(select_game_versions(result["supported_game_versions"], config, targets), targets)
 
+    def test_classic_transition_interfaces_do_not_add_release_tags(self) -> None:
+        result = parse_modus_zip(make_zip(
+            ("Addon/Addon.toc", "## Interface: 38002"),
+            ("Addon/Addon_Vanilla.toc", "## Interface: 11509"),
+            ("Addon/Addon_TBC.toc", "## Interface: 20504, 20505, 20506"),
+            ("Addon/Addon_Mists.toc", "## Interface: 50502, 50503, 50504"),
+        ))
+        self.assertEqual(result["toc_version"], "11509,20504,20505,20506,38002,50502,50503,50504")
+        self.assertEqual(result["unmapped_interface_values"], ["20504", "20505", "50502", "50503"])
+        self.assertEqual(result["supported_game_versions"], [
+            {"gameVersion": "1.15.9", "server": "wow_classic_era"},
+            {"gameVersion": "2.5.6", "server": "wow_anniversary"},
+            {"gameVersion": "3.80.2", "server": "wow_classic_titan"},
+            {"gameVersion": "5.5.4", "server": "wow_classic"},
+        ])
+
     def test_universal_flavors_use_live_choices_and_explicit_product_scope(self) -> None:
         result = parse_modus_zip(make_zip(
             ("Addon/Addon.toc", "## Interface: 11509,16001,20506,30405,38002,40402,50504,120100\n"),
